@@ -42,7 +42,7 @@ jobs:
             </PropertyGroup>
             <ItemGroup>
               <Compile Include="main.fs" />
-              <PackageReference Include="Hosihikari.Abstractions" Version="0.7.0" />
+              <PackageReference Include="Hosihikari.Abstractions" Version="0.7.1" />
               <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
             </ItemGroup>
           </Project>
