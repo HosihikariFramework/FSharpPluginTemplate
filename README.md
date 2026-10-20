@@ -42,3 +42,7 @@ is a fault and the host unloads the plugin.
 
 See the [F# provider](https://github.com/HosihikariFramework/FSharpProvider) for the compilation
 details.
+
+## Licence
+
+MIT-0, see [LICENSE.md](LICENSE.md).

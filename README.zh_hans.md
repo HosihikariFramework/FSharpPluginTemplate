@@ -38,3 +38,7 @@
 `OnUnload` 释放插件持有的东西。钩子抛出异常属于故障，宿主会卸载插件。
 
 编译细节见 [F# Provider](https://github.com/HosihikariFramework/FSharpProvider)。
+
+## 许可
+
+MIT-0，见 [LICENSE.md](LICENSE.md)。
