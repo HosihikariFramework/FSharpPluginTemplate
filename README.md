@@ -1,6 +1,6 @@
 # FSharpPluginTemplate
 
-A minimal source-compiled F# plugin for the Hosihikari framework. The F# provider compiles
+A minimal source-compiled F# plugin for the Hosihikari framework. The F# loader compiles
 `main.fsx` at load with FSharp.Compiler.Service and runs the assembly in a collectible ALC; there is
 no build step for the author.
 
@@ -9,7 +9,7 @@ no build step for the author.
 1. Copy this repository into your server as `plugins/MyFSharpPlugin/`.
 2. Rename the plugin: change `manifest.json` `name`, rename `MyFSharpPlugin.conf`, and rename the
    type in `main.fsx`. The package directory name must equal the manifest `name`.
-3. Install the shim variant for the server and the F# provider:
+3. Install the shim variant for the server and the F# loader:
 
    ```powershell
    lip install github.com/HosihikariFramework/Shim#levilamina   # or #endstone
@@ -19,11 +19,11 @@ no build step for the author.
 4. Restart the server. The log shows the plugin loading and enabling.
 
 For the self-hosted Linux carrier, install the suffix-less shim package and start the server through
-`hosihikari-server`; providers and plugins still live under `plugins/`.
+`hosihikari-server`; loaders and plugins still live under `plugins/`.
 
 ## Files
 
-- `manifest.json` — `provider: fsharp`, depends on `hosihikari` and `hosihikari-fsharp`.
+- `manifest.json` — `loader: fsharp`, depends on `hosihikari` and `hosihikari-fsharp`.
 - `main.fsx` — a parameterless type implementing `IPlugin`. It loads `helper.fsx` with `#load`.
 - `helper.fsx` — the second compilation unit, loaded into the entry script.
 - `MyFSharpPlugin.conf` — package defaults.
@@ -41,7 +41,7 @@ For the self-hosted Linux carrier, install the suffix-less shim package and star
 the plugin loaded and disabled. `OnUnload` releases what the plugin owns. An exception from a hook
 is a fault and the host unloads the plugin.
 
-See the [F# provider](https://github.com/HosihikariFramework/FSharpProvider) for the compilation
+See the [F# loader](https://github.com/HosihikariFramework/FSharpProvider) for the compilation
 details.
 
 ## Licence

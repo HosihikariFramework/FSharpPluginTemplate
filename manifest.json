@@ -8,8 +8,8 @@
     { "name": "hosihikari-fsharp" }
   ],
   "extraInfo": {
-    "api": "2",
-    "format_version": "1",
-    "provider": "fsharp"
+    "api_version": "2",
+    "manifest_version": "1",
+    "loader": "fsharp"
   }
 }
