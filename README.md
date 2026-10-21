@@ -24,7 +24,8 @@ For the self-hosted Linux carrier, install the suffix-less shim package and star
 ## Files
 
 - `manifest.json` — `provider: fsharp`, depends on `hosihikari` and `hosihikari-fsharp`.
-- `main.fsx` — a parameterless type implementing `IPlugin`.
+- `main.fsx` — a parameterless type implementing `IPlugin`. It loads `helper.fsx` with `#load`.
+- `helper.fsx` — the second compilation unit, loaded into the entry script.
 - `MyFSharpPlugin.conf` — package defaults.
 
 ## Configuration and data

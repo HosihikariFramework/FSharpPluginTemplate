@@ -22,7 +22,8 @@
 ## 文件
 
 - `manifest.json` —— `provider: fsharp`，依赖 `hosihikari` 与 `hosihikari-fsharp`。
-- `main.fsx` —— 实现 `IPlugin` 的无参类型。
+- `main.fsx` —— 实现 `IPlugin` 的无参类型，用 `#load` 引入 `helper.fsx`。
+- `helper.fsx` —— 第二个编译单元，被入口脚本加载。
 - `MyFSharpPlugin.conf` —— 包内默认配置。
 
 ## 配置与数据
