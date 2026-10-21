@@ -12,7 +12,7 @@ no build step for the author.
 3. Install the shim variant for the server and the F# provider:
 
    ```powershell
-   lip install github.com/HosihikariFramework/Shim#levilamina   # or #endstone / #endstone_linux
+   lip install github.com/HosihikariFramework/Shim#levilamina   # or #endstone
    lip install github.com/HosihikariFramework/FSharpProvider
    ```
 

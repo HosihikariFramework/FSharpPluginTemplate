@@ -11,7 +11,7 @@
 3. 按服务端安装 Shim 变体与 F# Provider：
 
    ```powershell
-   lip install github.com/HosihikariFramework/Shim#levilamina   # 或 #endstone / #endstone_linux
+   lip install github.com/HosihikariFramework/Shim#levilamina   # 或 #endstone
    lip install github.com/HosihikariFramework/FSharpProvider
    ```
 
