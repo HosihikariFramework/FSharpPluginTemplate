@@ -12,8 +12,8 @@ no build step for the author.
 3. Install the shim variant for the server and the F# loader:
 
    ```powershell
-   lip install github.com/HosihikariFramework/Shim#levilamina   # or #endstone
-   lip install github.com/HosihikariFramework/FSharpProvider
+   lip install github.com/HosihikariFramework/HostingShim#levilamina   # or #endstone
+   lip install github.com/HosihikariFramework/FSharpLoader
    ```
 
 4. Restart the server. The log shows the plugin loading and enabling.
@@ -41,7 +41,7 @@ For the self-hosted Linux carrier, install the suffix-less shim package and star
 the plugin loaded and disabled. `OnUnload` releases what the plugin owns. An exception from a hook
 is a fault and the host unloads the plugin.
 
-See the [F# loader](https://github.com/HosihikariFramework/FSharpProvider) for the compilation
+See the [F# loader](https://github.com/HosihikariFramework/FSharpLoader) for the compilation
 details.
 
 ## Licence

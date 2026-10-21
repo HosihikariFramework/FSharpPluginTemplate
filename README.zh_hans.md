@@ -11,8 +11,8 @@
 3. 按服务端安装 Shim 变体与 F# loader：
 
    ```powershell
-   lip install github.com/HosihikariFramework/Shim#levilamina   # 或 #endstone
-   lip install github.com/HosihikariFramework/FSharpProvider
+   lip install github.com/HosihikariFramework/HostingShim#levilamina   # 或 #endstone
+   lip install github.com/HosihikariFramework/FSharpLoader
    ```
 
 4. 重启服务端，日志里会看到插件加载与启用。
@@ -38,7 +38,7 @@
 `OnLoad` 在依赖就绪后执行；`OnEnable` 打开事件/定时器闸门，拒绝则保持已加载未启用；
 `OnUnload` 释放插件持有的东西。钩子抛出异常属于故障，宿主会卸载插件。
 
-编译细节见 [F# loader](https://github.com/HosihikariFramework/FSharpProvider)。
+编译细节见 [F# loader](https://github.com/HosihikariFramework/FSharpLoader)。
 
 ## 许可
 
