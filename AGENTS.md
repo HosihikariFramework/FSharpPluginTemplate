@@ -30,4 +30,5 @@ approach when changing the entry or `#load` graph.
 ## Context
 
 - [F# loader](https://github.com/HosihikariFramework/FSharpLoader).
-- [Design record](https://github.com/HosihikariFramework/Design) — GLOSSARY and ADRs.
+- Design decisions and terminology are kept by maintainers outside the public repositories; ask for
+  the relevant decision when changing lifecycle or public API.
