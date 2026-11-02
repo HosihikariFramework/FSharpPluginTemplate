@@ -8,16 +8,19 @@
 1. 把本仓复制到服务端，目录名用 `plugins/MyFSharpPlugin/`。
 2. 改名：改 `manifest.json` 的 `name`，重命名 `MyFSharpPlugin.conf`，再改 `main.fsx` 里的类型名。
    包目录名必须与清单里的 `name` 一致。
-3. 按服务端安装 Shim 变体与 F# loader：
+3. 用 Seiko 安装载体 bundle 与 F# loader：
 
    ```powershell
-   lip install github.com/HosihikariFramework/HostingShim#levilamina   # 或 #endstone
-   lip install github.com/HosihikariFramework/FSharpLoader
+   sk init                                  # 每个服务端根目录执行一次
+   sk add hosihikari-hosting-levilamina     # LeviLamina
+   # 或：sk add hosihikari-hosting-endstone
+   # 或：sk add hosihikari-hosting-selfhosted
+   sk add hosihikari-fsharp
    ```
 
 4. 重启服务端，日志里会看到插件加载与启用。
 
-自持态 Linux 用无后缀 Shim 包，并通过 `hosihikari-server` 启动；加载器与插件仍然放在 `plugins/` 下。
+自持态载体用 `sk add hosihikari-hosting-selfhosted`，按平台选 Windows 或 Linux；通过 `hosihikari-server`（Windows 上是 `hosihikari-server.exe`）启动。加载器与插件仍然放在 `plugins/` 下。
 
 ## 文件
 
