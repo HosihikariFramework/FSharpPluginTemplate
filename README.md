@@ -9,17 +9,19 @@ no build step for the author.
 1. Copy this repository into your server as `plugins/MyFSharpPlugin/`.
 2. Rename the plugin: change `manifest.json` `name`, rename `MyFSharpPlugin.conf`, and rename the
    type in `main.fsx`. The package directory name must equal the manifest `name`.
-3. Install the shim variant for the server and the F# loader:
+3. Install the carrier bundle and the F# loader with Seiko:
 
    ```powershell
-   lip install github.com/HosihikariFramework/HostingShim#levilamina   # or #endstone
-   lip install github.com/HosihikariFramework/FSharpLoader
+   sk init                                  # once per server root
+   sk add hosihikari-hosting-levilamina     # LeviLamina
+   # or: sk add hosihikari-hosting-endstone
+   # or: sk add hosihikari-hosting-selfhosted
+   sk add hosihikari-fsharp
    ```
 
 4. Restart the server. The log shows the plugin loading and enabling.
 
-For the self-hosted Linux carrier, install the suffix-less shim package and start the server through
-`hosihikari-server`; loaders and plugins still live under `plugins/`.
+For the self-hosted carriers, `sk add hosihikari-hosting-selfhosted` selects Windows or Linux; start the server through `hosihikari-server` (`hosihikari-server.exe` on Windows). Loaders and plugins still live under `plugins/`.
 
 ## Files
 
