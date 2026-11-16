@@ -2,7 +2,7 @@ name: verify
 
 on:
   push:
-    branches: [main]
+    branches: [main, v2/manifest]
   pull_request:
 
 jobs:
@@ -16,11 +16,12 @@ jobs:
       - name: 检查清单与入口
         run: |
           set -euo pipefail
-          test -f manifest.json
+          test -f hosihikari.json
+          test ! -f manifest.json
           test -f main.fsx
           test -f helper.fsx
           test -f MyFSharpPlugin.conf
-          node -e "const m=JSON.parse(require('fs').readFileSync('manifest.json','utf8')); if(m.extraInfo.loader!=='fsharp') throw new Error('loader'); if(m.entry!=='main.fsx') throw new Error('entry'); if(!m.dependencies?.some(d=>d.name==='hosihikari-fsharp')) throw new Error('dependencies');"
+          node -e "const m=JSON.parse(require('fs').readFileSync('hosihikari.json','utf8')); if(m.kind!=='plugin') throw new Error('kind'); if(m.apiVersion!==3) throw new Error('apiVersion'); if(m.loader!=='fsharp') throw new Error('loader'); if(m.entry!=='main.fsx') throw new Error('entry'); if(!m.dependencies?.some(d=>d.name==='hosihikari-fsharp')) throw new Error('dependencies');"
 
   compile:
     runs-on: ubuntu-latest
@@ -46,7 +47,7 @@ jobs:
             <ItemGroup>
               <Compile Include="helper.fs" />
               <Compile Include="main.fs" />
-              <PackageReference Include="Hosihikari.Plugin.Abstractions" Version="1.0.0" />
+              <PackageReference Include="Hosihikari.Plugin.Abstractions" Version="3.0.0" />
               <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
             </ItemGroup>
           </Project>

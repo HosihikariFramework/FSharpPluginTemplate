@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "name": "MyFSharpPlugin",
+  "version": "1.0.0",
+  "entry": "main.fsx",
+  "loader": "fsharp",
+  "kind": "plugin",
+  "apiVersion": 3,
+  "dependencies": [
+    { "name": "hosihikari" },
+    { "name": "hosihikari-fsharp" }
+  ],
+  "description": "A minimal source-compiled F# plugin.",
+  "author": "you",
+  "pack": {}
+}

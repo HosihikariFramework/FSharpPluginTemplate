@@ -7,8 +7,8 @@ no build step for the author.
 ## Use it
 
 1. Copy this repository into your server as `plugins/MyFSharpPlugin/`.
-2. Rename the plugin: change `manifest.json` `name`, rename `MyFSharpPlugin.conf`, and rename the
-   type in `main.fsx`. The package directory name must equal the manifest `name`.
+2. Rename the plugin: change `hosihikari.json` `name`, rename `MyFSharpPlugin.conf`, and rename
+   the type in `main.fsx`. The package directory name must equal the manifest `name`.
 3. Install the carrier bundle and the F# loader with Seiko:
 
    ```powershell
@@ -25,7 +25,12 @@ For the self-hosted carriers, `sk add hosihikari-hosting-selfhosted` selects Win
 
 ## Files
 
-- `manifest.json` — `loader: fsharp`, depends on `hosihikari` and `hosihikari-fsharp`.
+- `hosihikari.json` — `loader: fsharp`, depends on `hosihikari` and `hosihikari-fsharp`. The
+  packer writes the LeviLamina `manifest.json` envelope from it; that file is an output, not a
+  source.
+- `pack.ps1` / `pack.sh` — run the framework packer; `dist/MyFSharpPlugin/` is the installable
+  package. A project still on the 1.x `manifest.json` migrates in the same command
+  (`-MigrateOnly` / `--migrate-only` rewrites just the metadata).
 - `main.fsx` — a parameterless type implementing `IPlugin`. It loads `helper.fsx` with `#load`.
 - `helper.fsx` — the second compilation unit, loaded into the entry script.
 - `MyFSharpPlugin.conf` — package defaults.
@@ -41,7 +46,8 @@ For the self-hosted carriers, `sk add hosihikari-hosting-selfhosted` selects Win
 
 `OnLoad` runs after dependencies are ready. `OnEnable` opens the event/timer gate; a refusal keeps
 the plugin loaded and disabled. `OnUnload` releases what the plugin owns. An exception from a hook
-is a fault and the host unloads the plugin.
+is a fault and the host unloads the plugin. Every hook is a `ValueTask` and receives a
+`CancellationToken`; honour it, and return before awaiting anything you cannot cancel.
 
 See the [F# loader](https://github.com/HosihikariFramework/FSharpLoader) for the compilation
 details.
