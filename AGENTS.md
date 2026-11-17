@@ -7,14 +7,26 @@ at load; the package ships source and no build output.
 
 - `main.fsx` — plugin entry and hooks.
 - `helper.fsx` — example `#load` helper.
-- `manifest.json` — package manifest (`loader: fsharp`, `entry: main.fsx`).
+- `hosihikari.json` — package manifest (`loader: fsharp`, `entry: main.fsx`); the packer generates
+  the `manifest.json` envelope, so it is never committed.
 - `MyFSharpPlugin.conf` — package defaults.
-- `.github/workflows/verify.yml` — manifest check and compilation check.
+- `pack.ps1`, `pack.sh` — migrate a 1.x `manifest.json` if present, then invoke the core packer
+  and write `dist/MyFSharpPlugin/`.
+- `.github/workflows/verify.yml` — manifest check, compilation check and pack check.
 
 ## Build and verify
 
-There is no local pack script. Copy the directory into the server as `plugins/MyFSharpPlugin/` after
-renaming the manifest, `.conf`, and entry type.
+```powershell
+pwsh ./pack.ps1
+```
+
+```bash
+bash ./pack.sh
+```
+
+The packer needs a sibling `PluginManager` checkout, or `HOSIHIKARI_PLUGINMANAGER` pointing at one.
+Copy `dist/MyFSharpPlugin/` to the server's `plugins/` after renaming the manifest, `.conf`, and
+entry type.
 
 CI copies `main.fsx` into a check project and builds it with `dotnet build -c Release`. Use the same
 approach when changing the entry or `#load` graph.
@@ -22,7 +34,8 @@ approach when changing the entry or `#load` graph.
 ## Invariants
 
 - The manifest `name`, package directory name, and `.conf` name stay aligned.
-- Keep the `hosihikari-fsharp` dependency and `extraInfo.loader: fsharp`.
+- Keep the `hosihikari-fsharp` dependency and `loader: fsharp`.
+- Do not commit a generated `manifest.json`; it is an output of the packer.
 - `#load` and local `#r` paths stay relative to the package and resolve inside the package.
 - Do not commit build output or copied server packages.
 - Public default branches are protected. Work on a branch, open a pull request, and squash merge.

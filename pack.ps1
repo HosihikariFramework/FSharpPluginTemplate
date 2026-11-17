@@ -1,0 +1,71 @@
+﻿# Pack the source plugin with the framework's packer. The packer restores
+# #:package dependencies, keeps #load files and writes the LeviLamina
+# manifest.json envelope next to hosihikari.json.
+#
+# A project still on the 1.x manifest.json migrates first, in the same command.
+# Run `pwsh ./pack.ps1 -MigrateOnly` to rewrite the metadata and stop there.
+#
+# Requires a sibling PluginManager checkout, or HOSIHIKARI_PLUGINMANAGER.
+param(
+    [switch]$MigrateOnly
+)
+$ErrorActionPreference = 'Stop'
+
+$here = Split-Path -Parent $MyInvocation.MyCommand.Path
+$core = if ($env:HOSIHIKARI_PLUGINMANAGER) {
+    $env:HOSIHIKARI_PLUGINMANAGER
+} else {
+    Join-Path (Split-Path -Parent $here) 'PluginManager'
+}
+$tool = Join-Path $core 'tools\Pack\Hosihikari.Plugin.Pack.csproj'
+if (-not (Test-Path $tool)) {
+$packerMessages = @{
+    ar = 'لم يتم العثور على أداة التغليف الأساسية: {0}. شغّل من نسخة تحتوي على Hosihikari.PluginManager بجانبها، أو اضبط HOSIHIKARI_PLUGINMANAGER.'
+    fr = 'Outil de packaging principal introuvable : {0}. Lancez depuis une copie avec Hosihikari.PluginManager à côté, ou définissez HOSIHIKARI_PLUGINMANAGER.'
+    ru = 'Основной упаковщик не найден: {0}. Запустите из копии с соседним Hosihikari.PluginManager или задайте HOSIHIKARI_PLUGINMANAGER.'
+    es = 'No se encontró el empaquetador principal: {0}. Ejecuta desde una copia con Hosihikari.PluginManager al lado, o define HOSIHIKARI_PLUGINMANAGER.'
+    zh = '找不到核心打包器：{0}。请并列检出 Hosihikari.PluginManager，或设置 HOSIHIKARI_PLUGINMANAGER。'
+}
+$packerLanguage = [System.Globalization.CultureInfo]::CurrentUICulture.TwoLetterISOLanguageName
+$packerFormat = $packerMessages[$packerLanguage]
+if (-not $packerFormat) {
+    $packerFormat = 'Core packer not found: {0}. Run with a sibling Hosihikari.PluginManager checkout, or set HOSIHIKARI_PLUGINMANAGER.'
+}
+throw ($packerFormat -f $tool)
+}
+
+# 旧项目在源码根上还留着 manifest.json；migrate 就地把它换成 hosihikari.json（ADR-0058）。
+# 用源码根而不是暂存副本，迁移结果要留在作者的项目里。
+if (Test-Path (Join-Path $here 'manifest.json')) {
+    if (Test-Path (Join-Path $here 'hosihikari.json')) {
+        throw 'manifest.json and hosihikari.json both exist; delete the stale manifest.json first'
+    }
+
+    & dotnet run --project $tool -c Release -- migrate $here
+    if ($LASTEXITCODE -ne 0) { throw 'the migration failed' }
+    Write-Host 'migrated manifest.json to hosihikari.json; review it before packing'
+    if ($MigrateOnly) { return }
+}
+
+if ($MigrateOnly) {
+    Write-Host 'nothing to migrate: hosihikari.json is already in place'
+    return
+}
+
+# 打包器拒绝输出目录与源目录相交；先复制到临时目录，排除仓库元数据与旧产物。
+# TEMP 是 Windows 的形状；Linux / macOS 上按平台解析临时目录。
+$stage = Join-Path ([System.IO.Path]::GetTempPath()) ("hosihikari-template-" + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Force $stage | Out-Null
+try {
+    Get-ChildItem -Force $here |
+        Where-Object { $_.Name -notin @('.git', 'dist', 'bin', 'obj') } |
+        Copy-Item -Destination $stage -Recurse -Force
+
+    dotnet run --project $tool -c Release -- pack-plugin $stage (Join-Path $here 'hosihikari.json') (Join-Path $here 'dist')
+    # 原生命令非零退出不会自己抛：PowerShell 默认不把 $LASTEXITCODE 当错误。
+    if ($LASTEXITCODE -ne 0) { throw 'the packer failed' }
+} finally {
+    if (Test-Path $stage) {
+        Remove-Item -Recurse -Force $stage -ErrorAction SilentlyContinue
+    }
+}

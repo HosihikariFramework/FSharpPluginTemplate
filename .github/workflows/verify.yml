@@ -2,7 +2,7 @@ name: verify
 
 on:
   push:
-    branches: [main]
+    branches: [main, v2]
   pull_request:
 
 jobs:
@@ -16,16 +16,23 @@ jobs:
       - name: 检查清单与入口
         run: |
           set -euo pipefail
-          test -f manifest.json
+          test -f hosihikari.json
+          test ! -f manifest.json
           test -f main.fsx
           test -f helper.fsx
           test -f MyFSharpPlugin.conf
-          node -e "const m=JSON.parse(require('fs').readFileSync('manifest.json','utf8')); if(m.extraInfo.loader!=='fsharp') throw new Error('loader'); if(m.entry!=='main.fsx') throw new Error('entry'); if(!m.dependencies?.some(d=>d.name==='hosihikari-fsharp')) throw new Error('dependencies');"
+          node -e "const m=JSON.parse(require('fs').readFileSync('hosihikari.json','utf8')); if(m.kind!=='plugin') throw new Error('kind'); if(m.apiVersion!==3) throw new Error('apiVersion'); if(m.loader!=='fsharp') throw new Error('loader'); if(m.entry!=='main.fsx') throw new Error('entry'); if(!m.dependencies?.some(d=>d.name==='hosihikari-fsharp')) throw new Error('dependencies');"
 
   compile:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # 契约按同名分支并列检出：模板验的是对当前契约的编译，不是已发布包（ADR-0059）。
+      - uses: actions/checkout@v7
+        with:
+          repository: HosihikariFramework/PluginAbstractions
+          path: Hosihikari.Plugin.Abstractions
+          ref: ${{ github.head_ref == 'v2' && 'v2' || github.base_ref || github.ref_name }}
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
@@ -46,8 +53,8 @@ jobs:
             <ItemGroup>
               <Compile Include="helper.fs" />
               <Compile Include="main.fs" />
-              <PackageReference Include="Hosihikari.Plugin.Abstractions" Version="1.0.0" />
-              <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
+              <ProjectReference Include="$GITHUB_WORKSPACE/Hosihikari.Plugin.Abstractions/src/Hosihikari.Plugin.Abstractions.csproj" />
+              <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.15" />
             </ItemGroup>
           </Project>
           XML
