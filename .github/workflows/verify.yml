@@ -32,7 +32,7 @@ jobs:
         with:
           repository: HosihikariFramework/PluginAbstractions
           path: Hosihikari.Plugin.Abstractions
-          ref: ${{ github.head_ref || github.ref_name }}
+          ref: ${{ github.head_ref == 'v2' && 'v2' || github.base_ref || github.ref_name }}
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
