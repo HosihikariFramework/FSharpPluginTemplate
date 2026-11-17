@@ -6,9 +6,20 @@ no build step for the author.
 
 ## Use it
 
-1. Copy this repository into your server as `plugins/MyFSharpPlugin/`.
-2. Rename the plugin: change `hosihikari.json` `name`, rename `MyFSharpPlugin.conf`, and rename
-   the type in `main.fsx`. The package directory name must equal the manifest `name`.
+1. Keep this repository outside the server. Rename the plugin: change `hosihikari.json` `name`,
+   rename `MyFSharpPlugin.conf`, and rename the type in `main.fsx`. The package directory name must
+   equal the manifest `name`.
+2. Pack it with the framework packer, then copy `dist/MyFSharpPlugin/` into the server as
+   `plugins/MyFSharpPlugin/`. The packer needs a sibling `PluginManager` checkout, or
+   `HOSIHIKARI_PLUGINMANAGER` pointing at one:
+
+   ```powershell
+   pwsh ./pack.ps1
+   ```
+
+   ```bash
+   bash ./pack.sh
+   ```
 3. Install the carrier bundle and the F# loader with Seiko:
 
    ```powershell

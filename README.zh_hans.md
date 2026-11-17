@@ -5,9 +5,18 @@
 
 ## 使用
 
-1. 把本仓复制到服务端，目录名用 `plugins/MyFSharpPlugin/`。
-2. 改名：改 `hosihikari.json` 的 `name`，重命名 `MyFSharpPlugin.conf`，再改 `main.fsx` 里的类型名。
-   包目录名必须与清单里的 `name` 一致。
+1. 在服务端之外改这个仓库：改 `hosihikari.json` 的 `name`，重命名 `MyFSharpPlugin.conf`，再改
+   `main.fsx` 里的类型名。包目录名必须与清单里的 `name` 一致。
+2. 用框架打包器打包，再把 `dist/MyFSharpPlugin/` 复制到服务端 `plugins/MyFSharpPlugin/`。打包器需要
+   并列的 `PluginManager` 检出，或用 `HOSIHIKARI_PLUGINMANAGER` 指向一个：
+
+   ```powershell
+   pwsh ./pack.ps1
+   ```
+
+   ```bash
+   bash ./pack.sh
+   ```
 3. 用 Seiko 安装载体 bundle 与 F# loader：
 
    ```powershell
